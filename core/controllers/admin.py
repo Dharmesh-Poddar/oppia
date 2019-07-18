@@ -26,6 +26,7 @@ from core.domain import collection_services
 from core.domain import config_domain
 from core.domain import config_services
 from core.domain import exp_domain
+from core.domain import exp_fetchers
 from core.domain import exp_services
 from core.domain import recommendations_services
 from core.domain import rights_manager
@@ -57,7 +58,9 @@ class AdminPage(base.BaseHandler):
         for job in unfinished_job_data:
             job['can_be_canceled'] = job['is_cancelable'] and any([
                 klass.__name__ == job['job_type']
-                for klass in jobs_registry.ONE_OFF_JOB_MANAGERS])
+                for klass in (
+                    jobs_registry.ONE_OFF_JOB_MANAGERS + (
+                        jobs_registry.AUDIT_JOB_MANAGERS))])
 
         queued_or_running_job_types = set([
             job['job_type'] for job in unfinished_job_data])
@@ -66,6 +69,11 @@ class AdminPage(base.BaseHandler):
             'is_queued_or_running': (
                 klass.__name__ in queued_or_running_job_types)
         } for klass in jobs_registry.ONE_OFF_JOB_MANAGERS]
+        audit_job_specs = [{
+            'job_type': klass.__name__,
+            'is_queued_or_running': (
+                klass.__name__ in queued_or_running_job_types)
+        } for klass in jobs_registry.AUDIT_JOB_MANAGERS]
 
         continuous_computations_data = jobs.get_continuous_computations_info(
             jobs_registry.ALL_CONTINUOUS_COMPUTATION_MANAGERS)
@@ -92,6 +100,7 @@ class AdminPage(base.BaseHandler):
                 utils.get_human_readable_time_string(
                     utils.get_current_time_in_millisecs())),
             'one_off_job_specs': one_off_job_specs,
+            'audit_job_specs': audit_job_specs,
             'recent_job_data': recent_job_data,
             'unfinished_job_data': unfinished_job_data,
             'updatable_roles': {
@@ -167,14 +176,18 @@ class AdminHandler(base.BaseHandler):
                 config_services.revert_property(
                     self.user_id, config_property_id)
             elif self.payload.get('action') == 'start_new_job':
-                for klass in jobs_registry.ONE_OFF_JOB_MANAGERS:
+                for klass in (
+                        jobs_registry.ONE_OFF_JOB_MANAGERS + (
+                            jobs_registry.AUDIT_JOB_MANAGERS)):
                     if klass.__name__ == self.payload.get('job_type'):
                         klass.enqueue(klass.create_new())
                         break
             elif self.payload.get('action') == 'cancel_job':
                 job_id = self.payload.get('job_id')
                 job_type = self.payload.get('job_type')
-                for klass in jobs_registry.ONE_OFF_JOB_MANAGERS:
+                for klass in (
+                        jobs_registry.ONE_OFF_JOB_MANAGERS + (
+                            jobs_registry.AUDIT_JOB_MANAGERS)):
                     if klass.__name__ == job_type:
                         klass.cancel(job_id, self.user_id)
                         break
@@ -264,7 +277,7 @@ class AdminHandler(base.BaseHandler):
             for i in range(num_dummy_exps_to_generate):
                 title = random.choice(possible_titles)
                 category = random.choice(constants.SEARCH_DROPDOWN_CATEGORIES)
-                new_exploration_id = exp_services.get_new_exploration_id()
+                new_exploration_id = exp_fetchers.get_new_exploration_id()
                 exploration = exp_domain.Exploration.create_default_exploration(
                     new_exploration_id, title=title, category=category,
                     objective='Dummy Objective')
@@ -378,16 +391,17 @@ class DataExtractionQueryHandler(base.BaseHandler):
     @acl_decorators.can_access_admin_page
     def get(self):
         exp_id = self.request.get('exp_id')
-        exp_version = int(self.request.get('exp_version'))
+        try:
+            exp_version = int(self.request.get('exp_version'))
+            exploration = exp_fetchers.get_exploration_by_id(
+                exp_id, version=exp_version)
+        except Exception:
+            raise self.InvalidInputException(
+                'Entity for exploration with id %s and version %s not found.'
+                % (exp_id, self.request.get('exp_version')))
+
         state_name = self.request.get('state_name')
         num_answers = int(self.request.get('num_answers'))
-
-        exploration = exp_services.get_exploration_by_id(
-            exp_id, strict=False, version=exp_version)
-
-        if exploration is None:
-            raise self.InvalidInputException(
-                'No exploration with ID \'%s\' exists.' % exp_id)
 
         if state_name not in exploration.states:
             raise self.InvalidInputException(

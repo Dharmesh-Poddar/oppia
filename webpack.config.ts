@@ -33,7 +33,6 @@ module.exports = {
   entries: {
     about: commonPrefix + '/pages/about-page/about-page.scripts.ts',
     admin: commonPrefix + '/pages/admin-page/admin-page.scripts.ts',
-    app: commonPrefix + '/App.ts',
     collection_editor:
       commonPrefix + '/pages/collection-editor-page/' +
       'collection-editor-page.scripts.ts',
@@ -54,10 +53,10 @@ module.exports = {
     error: commonPrefix + '/pages/error-pages/error-page.scripts.ts',
     exploration_editor:
       commonPrefix + '/pages/exploration-editor-page/' +
-      'exploration-editor-page.controller.ts',
+      'exploration-editor-page.scripts.ts',
     exploration_player:
       commonPrefix + '/pages/exploration-player-page/' +
-      'exploration-player-page.controller.ts',
+      'exploration-player-page.scripts.ts',
     get_started:
       commonPrefix + '/pages/get-started-page/get-started-page.scripts.ts',
     landing:
@@ -80,46 +79,55 @@ module.exports = {
     privacy: commonPrefix + '/pages/privacy-page/privacy-page.controller.ts',
     preferences:
       commonPrefix + '/pages/preferences-page/preferences-page.scripts.ts',
-    profile: commonPrefix + '/pages/profile-page/profile-page.controller.ts',
-    signup: commonPrefix + '/pages/signup-page/signup-page.controller.ts',
+    profile: commonPrefix + '/pages/profile-page/profile-page.scripts.ts',
+    review_test:
+      commonPrefix + '/pages/review-test-page/review-test-page.scripts.ts',
+    signup: commonPrefix + '/pages/signup-page/signup-page.scripts.ts',
     skill_editor:
-      commonPrefix + '/pages/skill-editor-page/skill-editor-page.controller.ts',
+      commonPrefix + '/pages/skill-editor-page/skill-editor-page.scripts.ts',
     splash: commonPrefix + '/pages/splash-page/splash-page.scripts.ts',
     stewards:
       commonPrefix + '/pages/landing-pages/stewards-landing-page/' +
       'stewards-landing-page.scripts.ts',
     story_editor:
-      commonPrefix + '/pages/story-editor-page/story-editor-page.controller.ts',
-    teach: commonPrefix + '/pages/teach-page/teach-page.controller.ts',
+      commonPrefix + '/pages/story-editor-page/story-editor-page.scripts.ts',
+    story_viewer:
+      commonPrefix + '/pages/story-viewer-page/story-viewer-page.scripts.ts',
+    teach: commonPrefix + '/pages/teach-page/teach-page.scripts.ts',
     terms: commonPrefix + '/pages/terms-page/terms-page.controller.ts',
     thanks: commonPrefix + '/pages/thanks-page/thanks-page.controller.ts',
     topic_editor:
-      commonPrefix + '/pages/topic-editor-page/topic-editor-page.controller.ts',
+      commonPrefix + '/pages/topic-editor-page/topic-editor-page.scripts.ts',
     topics_and_skills_dashboard: (
       commonPrefix +
       '/pages/topics-and-skills-dashboard-page/' +
-      'topics-and-skills-dashboard-page.controller.ts'
+      'topics-and-skills-dashboard-page.scripts.ts'
     ),
     topic_viewer:
-      commonPrefix + '/pages/topic-viewer-page/topic-viewer-page.controller.ts',
+      commonPrefix + '/pages/topic-viewer-page/topic-viewer-page.scripts.ts',
   },
   plugins: [
     new HtmlWebpackPlugin({
-      chunks: ['app', 'admin'],
+      chunks: ['admin'],
       filename: 'admin-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free site for sharing knowledge via ' +
+          'interactive lessons called \'explorations\'. Learn from ' +
+          'user-created explorations, or teach and create your own.'
+      },
       template: commonPrefix + '/pages/admin-page/admin-page.mainpage.html',
       minify: htmlMinifyConfig,
       inject: false
     }),
     new HtmlWebpackPlugin({
-      chunks: ['app'],
       filename: 'base.html',
       template: 'core/templates/dev/head/pages/base.html',
       minify: htmlMinifyConfig,
       inject: false
     }),
     new HtmlWebpackPlugin({
-      chunks: ['app', 'about'],
+      chunks: ['about'],
       filename: 'about-page.mainpage.html',
       meta: {
         name: 'Personalized Online Learning from Oppia',
@@ -158,6 +166,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['contact'],
       filename: 'contact-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Contact the Oppia team, submit feedback, and learn ' +
+          'how to get involved with the Oppia project.'
+      },
       template: commonPrefix + '/pages/contact-page/contact-page.mainpage.html',
       minify: htmlMinifyConfig,
       inject: false
@@ -174,6 +187,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['donate'],
       filename: 'donate-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Donate to The Oppia Foundation.'
+      },
       template: commonPrefix + '/pages/donate-page/donate-page.mainpage.html',
       minify: htmlMinifyConfig,
       inject: false
@@ -181,6 +198,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['email_dashboard'],
       filename: 'email-dashboard-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free, open-source learning platform. ' +
+          'Join the community to create or try an exploration today!'
+      },
       template: (
         commonPrefix +
         '/pages/email-dashboard-pages/email-dashboard-page.mainpage.html'),
@@ -190,6 +212,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['email_dashboard_result'],
       filename: 'email-dashboard-result.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free, open-source learning platform. ' +
+          'Join the community to create or try an exploration today!'
+      },
       template:
         commonPrefix +
         '/pages/email-dashboard-pages/email-dashboard-result.mainpage.html',
@@ -222,7 +249,7 @@ module.exports = {
       inject: false
     }),
     new HtmlWebpackPlugin({
-      chunks: ['app', 'get_started'],
+      chunks: ['get_started'],
       filename: 'get-started-page.mainpage.html',
       meta: {
         name: 'Personalized Online Learning from Oppia',
@@ -236,6 +263,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['landing'],
       filename: 'topic-landing-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free, open-source learning platform. ' +
+          'Join the community to create or try an exploration today!'
+      },
       template:
         commonPrefix + '/pages/landing-pages/topic-landing-page/' +
         'topic-landing-page.mainpage.html',
@@ -245,6 +277,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['learner_dashboard'],
       filename: 'learner-dashboard-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free, open-source learning platform. ' +
+          'Join the community to create or try an exploration today!'
+      },
       template:
         commonPrefix + '/pages/learner-dashboard-page/' +
         'learner-dashboard-page.mainpage.html',
@@ -259,7 +296,7 @@ module.exports = {
       inject: false
     }),
     new HtmlWebpackPlugin({
-      chunks: ['app', 'maintenance'],
+      chunks: ['maintenance'],
       filename: 'maintenance-page.mainpage.html',
       template:
         commonPrefix + '/pages/maintenance-page/maintenance-page.mainpage.html',
@@ -269,13 +306,18 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['moderator'],
       filename: 'moderator-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free, open-source learning platform. ' +
+          'Join the community to create or try an exploration today!'
+      },
       template:
         commonPrefix + '/pages/moderator-page/moderator-page.mainpage.html',
       minify: htmlMinifyConfig,
       inject: false
     }),
     new HtmlWebpackPlugin({
-      chunks: ['app', 'privacy'],
+      chunks: ['privacy'],
       filename: 'privacy-page.mainpage.html',
       meta: {
         name: 'Personalized Online Learning from Oppia',
@@ -289,6 +331,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['notifications_dashboard'],
       filename: 'notifications-dashboard-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Keep track of the lessons you have created, as well ' +
+          'as feedback from learners.'
+      },
       template: (
         commonPrefix +
         '/pages/notifications-dashboard-page/' +
@@ -309,6 +356,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['preferences'],
       filename: 'preferences-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Change your Oppia profile settings and preferences'
+      },
       template:
         commonPrefix + '/pages/preferences-page/preferences-page.mainpage.html',
       minify: htmlMinifyConfig,
@@ -322,8 +373,20 @@ module.exports = {
       inject: false
     }),
     new HtmlWebpackPlugin({
+      chunks: ['review_test'],
+      filename: 'review-test-page.mainpage.html',
+      template:
+        commonPrefix + '/pages/review-test-page/review-test-page.mainpage.html',
+      minify: htmlMinifyConfig,
+      inject: false
+    }),
+    new HtmlWebpackPlugin({
       chunks: ['signup'],
       filename: 'signup-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Sign up for Oppia and begin exploring a new subject.'
+      },
       template: commonPrefix + '/pages/signup-page/signup-page.mainpage.html',
       minify: htmlMinifyConfig,
       inject: false
@@ -331,6 +394,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['skill_editor'],
       filename: 'skill-editor-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free, open-source learning platform. Join ' +
+          'the community to create or try an exploration today!'
+      },
       template:
         commonPrefix + '/pages/skill-editor-page/' +
         'skill-editor-page.mainpage.html',
@@ -338,7 +406,7 @@ module.exports = {
       inject: false
     }),
     new HtmlWebpackPlugin({
-      chunks: ['app', 'splash'],
+      chunks: ['splash'],
       filename: 'splash-page.mainpage.html',
       meta: {
         name: 'Personalized Online Learning from Oppia',
@@ -351,34 +419,13 @@ module.exports = {
       inject: false
     }),
     new HtmlWebpackPlugin({
-      chunks: ['app', 'splash'],
-      filename: 'splash_at0.html',
-      meta: {
-        name: 'Personalized Online Learning from Oppia',
-        description: 'Oppia is a free site for sharing knowledge via ' +
-          'interactive lessons called \'explorations\'. Learn from ' +
-          'user-created explorations, or teach and create your own.'
-      },
-      template: commonPrefix + '/pages/splash-page/splash_at0.html',
-      minify: htmlMinifyConfig,
-      inject: false
-    }),
-    new HtmlWebpackPlugin({
-      chunks: ['splash'],
-      filename: 'splash_at1.html',
-      meta: {
-        name: 'Personalized Online Learning from Oppia',
-        description: 'Oppia is a free site for sharing knowledge via ' +
-          'interactive lessons called \'explorations\'. Learn from ' +
-          'user-created explorations, or teach and create your own.'
-      },
-      template: commonPrefix + '/pages/splash-page/splash_at1.html',
-      minify: htmlMinifyConfig,
-      inject: false
-    }),
-    new HtmlWebpackPlugin({
       chunks: ['stewards'],
       filename: 'stewards-landing-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free, open-source learning platform. ' +
+          'Join the community to create or try an exploration today!'
+      },
       template:
         commonPrefix +
         '/pages/landing-pages/stewards-landing-page/' +
@@ -389,6 +436,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['story_editor'],
       filename: 'story-editor-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free, open-source learning platform. Join ' +
+          'the community to create or try an exploration today!'
+      },
       template:
         commonPrefix + '/pages/story-editor-page/' +
         'story-editor-page.mainpage.html',
@@ -396,7 +448,16 @@ module.exports = {
       inject: false
     }),
     new HtmlWebpackPlugin({
-      chunks: ['app', 'teach'],
+      chunks: ['story_viewer'],
+      filename: 'story-viewer-page.mainpage.html',
+      template:
+        commonPrefix + '/pages/story-viewer-page/' +
+        'story-viewer-page.mainpage.html',
+      minify: htmlMinifyConfig,
+      inject: false
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ['teach'],
       filename: 'teach-page.mainpage.html',
       meta: {
         name: 'Personalized Online Learning from Oppia',
@@ -409,7 +470,7 @@ module.exports = {
       inject: false
     }),
     new HtmlWebpackPlugin({
-      chunks: ['app', 'terms'],
+      chunks: ['terms'],
       filename: 'terms-page.mainpage.html',
       meta: {
         name: 'Personalized Online Learning from Oppia',
@@ -424,6 +485,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['thanks'],
       filename: 'thanks-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Thank you for donating to The Oppia Foundation.'
+      },
       template: commonPrefix + '/pages/thanks-page/thanks-page.mainpage.html',
       minify: htmlMinifyConfig,
       inject: false
@@ -431,6 +496,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['topic_editor'],
       filename: 'topic-editor-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free, open-source learning platform. ' +
+          'Join the community to create or try an exploration today!'
+      },
       template:
         commonPrefix + '/pages/topic-editor-page/' +
         'topic-editor-page.mainpage.html',
@@ -440,6 +510,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['topics_and_skills_dashboard'],
       filename: 'topics-and-skills-dashboard-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free, open-source learning platform. ' +
+          'Join the community to create or try an exploration today!'
+      },
       template: (
         commonPrefix +
         '/pages/topics-and-skills-dashboard-page/' +
@@ -451,6 +526,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       chunks: ['topic_viewer'],
       filename: 'topic-viewer-page.mainpage.html',
+      meta: {
+        name: 'Personalized Online Learning from Oppia',
+        description: 'Oppia is a free, open-source learning platform. Join ' +
+          'the community to create or try an exploration today!'
+      },
       template:
         commonPrefix + '/pages/topic-viewer-page/' +
         'topic-viewer-page.mainpage.html',

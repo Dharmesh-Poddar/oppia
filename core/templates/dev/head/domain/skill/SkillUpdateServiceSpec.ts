@@ -69,10 +69,12 @@ describe('Skill update service', function() {
           content_id: 'worked_example_2'
         }
       ],
-      content_ids_to_audio_translations: {
-        explanation: {},
-        worked_example_1: {},
-        worked_example_2: {}
+      recorded_voiceovers: {
+        voiceovers_mapping: {
+          explanation: {},
+          worked_example_1: {},
+          worked_example_2: {}
+        }
       }
     };
 
@@ -151,7 +153,7 @@ describe('Skill update service', function() {
     SkillUpdateService.deleteMisconception(skill, '2');
     expect(UndoRedoService.getCommittableChangeList()).toEqual([{
       cmd: 'delete_skill_misconception',
-      id: '2'
+      misconception_id: '2'
     }]);
     expect(skill.getMisconceptions().length).toEqual(1);
     UndoRedoService.undoChange(skill);
@@ -167,7 +169,7 @@ describe('Skill update service', function() {
       property_name: 'name',
       old_value: 'test name',
       new_value: 'new name',
-      id: '2'
+      misconception_id: '2'
     }]);
     expect(skill.findMisconceptionById('2').getName()).toEqual('new name');
     UndoRedoService.undoChange(skill);
@@ -183,7 +185,7 @@ describe('Skill update service', function() {
       property_name: 'notes',
       old_value: 'test notes',
       new_value: 'new notes',
-      id: '2'
+      misconception_id: '2'
     }]);
     expect(skill.findMisconceptionById('2').getNotes()).toEqual('new notes');
     UndoRedoService.undoChange(skill);
@@ -202,7 +204,7 @@ describe('Skill update service', function() {
       property_name: 'feedback',
       old_value: 'test feedback',
       new_value: 'new feedback',
-      id: '2'
+      misconception_id: '2'
     }]);
     expect(skill.findMisconceptionById('2').getFeedback())
       .toEqual('new feedback');

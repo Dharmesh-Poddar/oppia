@@ -26,7 +26,7 @@ from core.domain import collection_services
 from core.domain import config_domain
 from core.domain import dependency_registry
 from core.domain import event_services
-from core.domain import exp_services
+from core.domain import exp_fetchers
 from core.domain import feedback_services
 from core.domain import interaction_registry
 from core.domain import learner_progress_services
@@ -94,7 +94,7 @@ def _get_exploration_player_data(
         - 'meta_description': str. Objective of exploration.
     """
     try:
-        exploration = exp_services.get_exploration_by_id(
+        exploration = exp_fetchers.get_exploration_by_id(
             exploration_id, version=version)
     except Exception:
         raise Exception
@@ -253,7 +253,7 @@ class ExplorationHandler(base.BaseHandler):
         version = int(version) if version else None
 
         try:
-            exploration = exp_services.get_exploration_by_id(
+            exploration = exp_fetchers.get_exploration_by_id(
                 exploration_id, version=version)
         except Exception as e:
             raise self.PageNotFoundException(e)
@@ -318,10 +318,8 @@ class PretestHandler(base.BaseHandler):
         story = story_services.get_story_by_id(story_id, strict=False)
         if story is None:
             raise self.InvalidInputException
-
         if not story.has_exploration(exploration_id):
             raise self.InvalidInputException
-
         pretest_questions, _, next_start_cursor = (
             question_services.get_questions_and_skill_descriptions_by_skill_ids(
                 feconf.NUM_PRETEST_QUESTIONS,
@@ -607,7 +605,7 @@ class AnswerSubmittedEventHandler(base.BaseHandler):
         classification_categorization = self.payload.get(
             'classification_categorization')
 
-        exploration = exp_services.get_exploration_by_id(
+        exploration = exp_fetchers.get_exploration_by_id(
             exploration_id, version=version)
 
         old_interaction = exploration.states[old_state_name].interaction
@@ -1021,7 +1019,6 @@ class QuestionPlayerHandler(base.BaseHandler):
     @acl_decorators.open_access
     def get(self):
         """Handles GET request."""
-        start_cursor = self.request.get('start_cursor')
         # Skill ids are given as a comma separated list because this is
         # a GET request.
 
@@ -1032,16 +1029,14 @@ class QuestionPlayerHandler(base.BaseHandler):
             raise self.InvalidInputException(
                 'Question count has to be greater than 0')
 
-        questions, _, next_start_cursor = (
-            question_services.get_questions_and_skill_descriptions_by_skill_ids(
+        questions = (
+            question_services.get_questions_by_skill_ids(
                 int(question_count),
-                skill_ids,
-                start_cursor)
+                skill_ids)
         )
 
         question_dicts = [question.to_dict() for question in questions]
         self.values.update({
-            'question_dicts': question_dicts,
-            'next_start_cursor': next_start_cursor
+            'question_dicts': question_dicts
         })
         self.render_json(self.values)

@@ -35,6 +35,8 @@ require('services/GenerateContentIdService.ts');
 
 require('pages/skill-editor-page/skill-editor-page.constants.ts');
 
+var oppia = require('AppInit.ts').module;
+
 oppia.directive('skillConceptCardEditor', [
   'GenerateContentIdService', 'SkillEditorStateService', 'SkillUpdateService',
   'SubtitledHtmlObjectFactory', 'UrlInterpolationService',
@@ -197,8 +199,8 @@ oppia.directive('skillConceptCardEditor', [
                 $scope.skill, SubtitledHtmlObjectFactory.createDefault(
                   result.workedExampleHtml,
                   GenerateContentIdService.getNextId(
-                    $scope.skill.getConceptCard()
-                      .getContentIdsToAudioTranslations().getAllContentId(),
+                    $scope.skill.getConceptCard().getRecordedVoiceovers(
+                    ).getAllContentId(),
                     COMPONENT_NAME_WORKED_EXAMPLE)));
               $scope.bindableFieldsDict.displayedWorkedExamples =
                 $scope.skill.getConceptCard().getWorkedExamples();

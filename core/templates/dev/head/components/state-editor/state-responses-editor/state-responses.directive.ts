@@ -67,9 +67,7 @@ require('services/ExplorationHtmlFormatterService.ts');
 require('services/GenerateContentIdService.ts');
 require('services/HtmlEscaperService.ts');
 
-var oppia = require('AppInit.ts').module;
-
-oppia.directive('stateResponses', [
+angular.module('oppia').directive('stateResponses', [
   'UrlInterpolationService', function(UrlInterpolationService) {
     return {
       restrict: 'E',
@@ -504,9 +502,9 @@ oppia.directive('stateResponses', [
             });
           };
 
-          $scope.saveTaggedMisconception = function(misconceptionId) {
+          $scope.saveTaggedMisconception = function(misconceptionId, skillId) {
             ResponsesService.updateActiveAnswerGroup({
-              taggedMisconceptionId: misconceptionId
+              taggedSkillMisconceptionId: skillId + '-' + misconceptionId
             }, function(newAnswerGroups) {
               $scope.onSaveInteractionAnswerGroups(newAnswerGroups);
               $scope.refreshWarnings()();
